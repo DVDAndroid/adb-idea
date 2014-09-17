@@ -225,7 +225,6 @@ public class StartDefaultActivityCommandWithDebugger implements Command {
                     androidToolWindow.activate(new Runnable() {
                         public void run() {
                             int count = androidToolWindow.getContentManager().getContentCount();
-                            info(String.format("ContentCount [%s]", count));
                             for (int i = 0; i < count; i++) {
                                 Content content = androidToolWindow.getContentManager().getContent(i);
                                 DevicePanel devicePanel = content == null ? null : (DevicePanel)content.getUserData(AndroidToolWindowFactory.DEVICES_PANEL_KEY);
@@ -239,6 +238,7 @@ public class StartDefaultActivityCommandWithDebugger implements Command {
                                     break;
                                 }
                             }
+
                         }
                     }, false);
                 }
