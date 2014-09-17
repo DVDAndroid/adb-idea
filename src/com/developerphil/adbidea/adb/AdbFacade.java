@@ -13,11 +13,14 @@ import org.jetbrains.android.util.AndroidUtils;
 import com.android.ddmlib.AndroidDebugBridge;
 import com.android.ddmlib.IDevice;
 import com.developerphil.adbidea.adb.command.ClearDataAndRestartCommand;
+import com.developerphil.adbidea.adb.command.ClearDataAndRestartCommandWithDebugger;
 import com.developerphil.adbidea.adb.command.ClearDataCommand;
 import com.developerphil.adbidea.adb.command.Command;
 import com.developerphil.adbidea.adb.command.KillCommand;
 import com.developerphil.adbidea.adb.command.RestartPackageCommand;
+import com.developerphil.adbidea.adb.command.RestartPackageCommandWithDebugger;
 import com.developerphil.adbidea.adb.command.StartDefaultActivityCommand;
+import com.developerphil.adbidea.adb.command.StartDefaultActivityCommandWithDebugger;
 import com.developerphil.adbidea.adb.command.ToggleDisplayCommand;
 import com.developerphil.adbidea.adb.command.UninstallCommand;
 import com.developerphil.adbidea.ui.DeviceChooserDialog;
@@ -31,7 +34,7 @@ public class AdbFacade {
 
 	private static final ExecutorService EXECUTOR = Executors
 			.newCachedThreadPool(new ThreadFactoryBuilder()
-                    .setNameFormat("AdbIdea-%d").build());
+					.setNameFormat("AdbIdea-%d").build());
 
 	public static void uninstall(Project project) {
 		executeOnDevice(project, new UninstallCommand());
@@ -59,6 +62,18 @@ public class AdbFacade {
 
 	public static void toggleDisplay(Project project) {
 		executeOnDevice(project, new ToggleDisplayCommand());
+	}
+
+	public static void startDefaultActivityWithDebugger(Project project) {
+		executeOnDevice(project, new StartDefaultActivityCommandWithDebugger());
+	}
+
+	public static void restartDefaultActivityWithDebugger(Project project) {
+		executeOnDevice(project, new RestartPackageCommandWithDebugger());
+	}
+
+	public static void clearDataAndRestartWithDebugger(Project project) {
+		executeOnDevice(project, new ClearDataAndRestartCommandWithDebugger());
 	}
 
 	private static void executeOnDevice(final Project project,
