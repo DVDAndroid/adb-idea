@@ -2,8 +2,7 @@ package com.developerphil.adbidea.adb.command;
 
 import com.android.ddmlib.*;
 import com.android.tools.idea.ddms.DevicePanel;
-import com.android.tools.idea.logcat.AndroidLogcatView;
-import com.android.tools.idea.monitor.AndroidToolWindowFactory;
+import com.developerphil.adbidea.adb.command.receiver.GenericReceiver;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.intellij.execution.*;
@@ -26,13 +25,13 @@ import com.intellij.util.NotNullFunction;
 import org.jetbrains.android.dom.AndroidDomUtil;
 import org.jetbrains.android.dom.manifest.*;
 import org.jetbrains.android.facet.AndroidFacet;
+
 import org.jetbrains.android.sdk.AndroidSdkUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
-import java.lang.reflect.InvocationTargetException;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
