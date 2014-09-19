@@ -27,17 +27,11 @@
 
 
     <change-notes><![CDATA[
-        <b>1.2.1</b>
-        <ul>
-            <li>BUGFIX: Can't start or restart app in Android Studio 1.4</li>
-        </ul>
-        <b>1.2.0</b>
-        <ul>
-            <li>FEATURE: New "ADB Operations Popup...". Windows: Ctrl+Alt+Shift+A  -  Mac OSX: Ctrl+Shift+A</li>
-        </ul>
         <b>1.1.4</b>
         <ul>
-            <li>BUGFIX: Start & Restart is broken when the activity is merged in the manifest.</li>
+            <li>Added support for debugging</li>
+            <li>Added toolbar icons</li>
+            <li>Added keymap entries for each action</li>
         </ul>
         <b>1.1.3</b>
         <ul>
