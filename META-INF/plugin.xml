@@ -1,4 +1,4 @@
-<idea-plugin version="3" url="https://github.com/pbreault/adb-idea">
+<idea-plugin url="https://github.com/pbreault/adb-idea" version="3">
     <id>com.developerphil.adbidea</id>
     <name>ADB Idea</name>
     <version>1.1.6</version>
@@ -31,6 +31,8 @@
         <b>1.1.6</b>
         <ul>
             <li>Added device reboot action</li>
+            <li>Code cleanup for debugger actions</li>
+            <li>Added check for activateDdmsIfNecessary</li>
         </ul>
         <b>1.1.5</b>
         <ul>
@@ -70,88 +72,127 @@
     <depends>org.jetbrains.android</depends>
 
     <actions>
-        <group id="AdbIdea" text="_ADB Idea" description="ADB Idea" popup="true">
-            <action id="com.developerphil.adbidea.action.UninstallAction"
-                    class="com.developerphil.adbidea.action.UninstallAction"
-                    text="ADB Uninstall App"
-                    description="Uninstalls the current application">
+        <group description="ADB Idea" id="AdbIdea" popup="true" text="_ADB Idea">
+            <action class="com.developerphil.adbidea.action.UninstallAction"
+                    description="Uninstalls the current application"
+                    id="com.developerphil.adbidea.action.UninstallAction"
+                    text="ADB Uninstall App">
             </action>
 
-            <action id="com.developerphil.adbidea.action.KillAction"
-                    class="com.developerphil.adbidea.action.KillAction"
-                    text="ADB Kill App"
-                    description="Kills the current application">
+            <action class="com.developerphil.adbidea.action.KillAction"
+                    description="Kills the current application"
+                    id="com.developerphil.adbidea.action.KillAction"
+                    text="ADB Kill App">
             </action>
-            <action id="com.developerphil.adbidea.action.StartAction"
-                    class="com.developerphil.adbidea.action.StartAction"
-                    text="ADB Start App"
-                    description="Starts the current application">
+            <action class="com.developerphil.adbidea.action.StartAction"
+                    description="Starts the current application"
+                    id="com.developerphil.adbidea.action.StartAction"
+                    text="ADB Start App">
             </action>
-            <action id="com.developerphil.adbidea.action.RestartAction"
-                    class="com.developerphil.adbidea.action.RestartAction"
-                    text="ADB Restart App"
-                    description="Restarts the current application">
+            <action class="com.developerphil.adbidea.action.RestartAction"
+                    description="Restarts the current application"
+                    id="com.developerphil.adbidea.action.RestartAction"
+                    text="ADB Restart App">
             </action>
-            <action id="com.developerphil.adbidea.action.ClearDataAction"
-                    class="com.developerphil.adbidea.action.ClearDataAction"
-                    text="ADB Clear App Data"
-                    description="Clears the private storage of the app">
+            <action class="com.developerphil.adbidea.action.ClearDataAction"
+                    description="Clears the private storage of the app"
+                    id="com.developerphil.adbidea.action.ClearDataAction"
+                    text="ADB Clear App Data">
             </action>
-            <action id="com.developerphil.adbidea.action.ClearDataAndRestartAction"
-                    class="com.developerphil.adbidea.action.ClearDataAndRestartAction"
-                    text="ADB Clear App Data and Restart"
-                    description="Clears the private storage of the app and restarts it">
+            <action class="com.developerphil.adbidea.action.ClearDataAndRestartAction"
+                    description="Clears the private storage of the app and restarts it"
+                    id="com.developerphil.adbidea.action.ClearDataAndRestartAction"
+                    text="ADB Clear App Data and Restart">
             </action>
 
+            <group description="ADB commands to connect to device" id="AdbConnect"
+                   popup="true" text="_ADB Connect...">
+                <action class="com.dvd.intellijidea.adbidea.action.ConnectAction100"
+                        description="Connect to 192.168.1.100"
+                        id="com.dvd.intellijidea.adbidea.action.ConnectAction100"
+                        text="ADB Connect to 192.168.1.100">
+                </action>
+                <action class="com.dvd.intellijidea.adbidea.action.ConnectAction101"
+                        description="Connect to 192.168.1.101"
+                        id="com.dvd.intellijidea.adbidea.action.ConnectAction101"
+                        text="ADB Connect to 192.168.1.101">
+                </action>
+                <action class="com.dvd.intellijidea.adbidea.action.ConnectAction102"
+                        description="Connect to 192.168.1.102"
+                        id="com.dvd.intellijidea.adbidea.action.ConnectAction102"
+                        text="ADB Connect to 192.168.1.102">
+                </action>
+                <action class="com.dvd.intellijidea.adbidea.action.ConnectAction103"
+                        description="Connect to 192.168.1.103"
+                        id="com.dvd.intellijidea.adbidea.action.ConnectAction103"
+                        text="ADB Connect to 192.168.1.103">
+                </action>
+                <action class="com.dvd.intellijidea.adbidea.action.ConnectAction104"
+                        description="Connect to 192.168.1.104"
+                        id="com.dvd.intellijidea.adbidea.action.ConnectAction104"
+                        text="ADB Connect to 192.168.1.104">
+                </action>
+                <action class="com.dvd.intellijidea.adbidea.action.ConnectAction105"
+                        description="Connect to 192.168.1.105"
+                        id="com.dvd.intellijidea.adbidea.action.ConnectAction105"
+                        text="ADB Connect to 192.168.1.105">
+                </action>
+                <action class="com.dvd.intellijidea.adbidea.action.ConnectCustomIpAction"
+                        description="Connect to custom ip"
+                        id="com.dvd.intellijidea.adbidea.action.ConnectCustomIpAction"
+                        text="ADB connect to custom ip">
+                </action>
+
+                <action class="com.dvd.intellijidea.adbidea.action.StartServerAction"
+                        description="Start ADB server"
+                        id="com.dvd.intellijidea.adbidea.action.StartServerAction"
+                        text="ADB Start Server">
+                </action>
+                <action class="com.dvd.intellijidea.adbidea.action.KillServerAction"
+                        description="Kill ADB server"
+                        id="com.dvd.intellijidea.adbidea.action.KillServerAction"
+                        text="ADB Kill Server">
+                </action>
+            </group>
             <!-- DEBUGGING ENABLED -->
-            <action id="com.developerphil.adbidea.action.StartWithDebuggerAction"
-                    class="com.developerphil.adbidea.action.StartWithDebuggerAction"
-                    text="ADB Start App With Debugger"
-                    description="Starts the current application">
+            <action class="com.developerphil.adbidea.action.StartWithDebuggerAction"
+                    description="Starts the current application"
+                    id="com.developerphil.adbidea.action.StartWithDebuggerAction"
+                    text="ADB Start App With Debugger">
             </action>
-            <action id="com.developerphil.adbidea.action.RestartWithDebuggerAction"
-                    class="com.developerphil.adbidea.action.RestartWithDebuggerAction"
-                    text="ADB Restart App With Debugger"
-                    description="Restarts the current application">
+            <action class="com.developerphil.adbidea.action.RestartWithDebuggerAction"
+                    description="Restarts the current application"
+                    id="com.developerphil.adbidea.action.RestartWithDebuggerAction"
+                    text="ADB Restart App With Debugger">
             </action>
-            <action id="com.developerphil.adbidea.action.ClearDataAndRestartWithDebuggerAction"
-                    class="com.developerphil.adbidea.action.ClearDataAndRestartWithDebuggerAction"
-                    text="ADB Clear App Data and Restart With Debugger"
-                    description="Clears the private storage of the app and restarts it">
-                    <keyboard-shortcut first-keystroke="control alt 8" keymap="$default"/>
+            <action class="com.developerphil.adbidea.action.ClearDataAndRestartWithDebuggerAction"
+                    description="Clears the private storage of the app and restarts it"
+                    id="com.developerphil.adbidea.action.ClearDataAndRestartWithDebuggerAction"
+                    text="ADB Clear App Data and Restart With Debugger">
             </action>
-            <action id="com.developerphil.adbidea.action.RebootAction"
-                    class="com.developerphil.adbidea.action.RebootAction"
-                    text="ADB Reboot Device"
-                    description="Reboot the device">
-                    <keyboard-shortcut first-keystroke="control alt 9" keymap="$default"/>
+            <action class="com.developerphil.adbidea.action.RebootAction"
+                    description="Reboot the device"
+                    id="com.developerphil.adbidea.action.RebootAction"
+                    text="ADB Reboot Device">
             </action>
             <!-- <add-to-group group-id="AndroidToolsGroup" anchor="first"/> -->
-            <add-to-group group-id="MainMenu" relative-to-action="ToolsMenu" anchor="after"/>
+            <add-to-group anchor="after" group-id="MainMenu" relative-to-action="ToolsMenu"/>
         </group>
-        <action id="ADBIdeaKillApp"
-                class="com.developerphil.adbidea.action.KillAction"
-                text="Adb Idea Kill App"
+        <action class="com.developerphil.adbidea.action.KillAction"
+                description="Adb Idea Kill App"
                 icon="/icons/circle_stop.png"
-                description="Adb Idea Kill App">
-            <add-to-group group-id="ToolbarRunGroup" anchor="after" relative-to-action="AndroidConnectDebuggerAction"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 1"/>
+                id="ADBIdeaKillApp"
+                text="Adb Idea Kill App">
+            <add-to-group anchor="after" group-id="ToolbarRunGroup"
+                          relative-to-action="AndroidConnectDebuggerAction"/>
         </action>
-        <action id="ADBIdeaDebugApp"
-                class="com.developerphil.adbidea.action.RestartWithDebuggerAction"
-                text="Adb Idea Debug App"
-                icon="/icons/circle_debug.png"
-                description="Adb Idea Debug App">
-            <add-to-group group-id="ToolbarRunGroup" anchor="after" relative-to-action="AndroidConnectDebuggerAction"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 7"/>
-        </action>
-        <action id="ADBIdeaRunApp"
-                class="com.developerphil.adbidea.action.RestartAction"
-                text="Adb Idea Run App"
-                icon="/icons/circle_run.png"
-                description="Adb Idea Debug App">
-            <add-to-group group-id="ToolbarRunGroup" anchor="after" relative-to-action="AndroidConnectDebuggerAction"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt 3"/>
+        <action class="com.developerphil.adbidea.action.ClearDataAndRestartAction"
+                description="ADB Clear App Data and Restart"
+                icon="/icons/circle_clear_run.png"
+                id="ADBIdeaClearRunApp"
+                text="Adb Idea Clean and Run App">
+            <add-to-group anchor="after" group-id="ToolbarRunGroup"
+                          relative-to-action="AndroidConnectDebuggerAction"/>
         </action>
     </actions>
 </idea-plugin>
