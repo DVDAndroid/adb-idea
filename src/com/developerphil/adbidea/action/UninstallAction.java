@@ -6,9 +6,8 @@ import com.intellij.openapi.project.Project;
 
 public class UninstallAction extends AdbAction {
 
-    public void actionPerformed(AnActionEvent e, Project project) {
-        AdbFacade.uninstall(project);
-    }
-
+	public void actionPerformed(AnActionEvent e, Project project) {
+		AdbFacade.uninstall(project);
+	}
 
 }

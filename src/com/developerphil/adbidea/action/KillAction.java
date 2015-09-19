@@ -6,8 +6,8 @@ import com.intellij.openapi.project.Project;
 
 public class KillAction extends AdbAction {
 
-    public void actionPerformed(AnActionEvent e, Project project) {
-        AdbFacade.kill(project);
-    }
+	public void actionPerformed(AnActionEvent e, Project project) {
+		AdbFacade.kill(project);
+	}
 
 }

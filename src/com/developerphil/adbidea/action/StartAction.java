@@ -6,7 +6,7 @@ import com.intellij.openapi.project.Project;
 
 public class StartAction extends AdbAction {
 
-    public void actionPerformed(AnActionEvent e, Project project) {
-        AdbFacade.startDefaultActivity(project);
-    }
+	public void actionPerformed(AnActionEvent e, Project project) {
+		AdbFacade.startDefaultActivity(project);
+	}
 }

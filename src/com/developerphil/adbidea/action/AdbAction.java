@@ -7,11 +7,11 @@ import com.intellij.openapi.project.Project;
 
 public abstract class AdbAction extends AnAction {
 
-    @Override
-    public final void actionPerformed(AnActionEvent e) {
-        final Project project = e.getData(PlatformDataKeys.PROJECT);
-        actionPerformed(e, project);
-    }
+	@Override
+	public final void actionPerformed(AnActionEvent e) {
+		final Project project = e.getData(PlatformDataKeys.PROJECT);
+		actionPerformed(e, project);
+	}
 
-    public abstract void actionPerformed(AnActionEvent e, Project project);
+	public abstract void actionPerformed(AnActionEvent e, Project project);
 }

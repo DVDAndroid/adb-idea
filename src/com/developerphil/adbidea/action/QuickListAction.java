@@ -1,45 +1,53 @@
 package com.developerphil.adbidea.action;
 
-import com.intellij.ide.actions.QuickSwitchSchemeAction;
-import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class QuickListAction extends QuickSwitchSchemeAction implements DumbAware {
+import com.intellij.ide.actions.QuickSwitchSchemeAction;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.project.DumbAware;
+import com.intellij.openapi.project.Project;
 
-    protected void fillActions(@Nullable final Project project,
-                               @NotNull final DefaultActionGroup group,
-                               @NotNull final DataContext dataContext) {
+public class QuickListAction extends QuickSwitchSchemeAction
+		implements DumbAware {
 
-        if (project == null) {
-            return;
-        }
+	protected void fillActions(@Nullable final Project project,
+			@NotNull final DefaultActionGroup group,
+			@NotNull final DataContext dataContext) {
 
-        addAction("com.developerphil.adbidea.action.UninstallAction", group);
-        addAction("com.developerphil.adbidea.action.KillAction", group);
-        addAction("com.developerphil.adbidea.action.StartAction", group);
-        addAction("com.developerphil.adbidea.action.RestartAction", group);
-        addAction("com.developerphil.adbidea.action.ClearDataAction", group);
-        addAction("com.developerphil.adbidea.action.ClearDataAndRestartAction", group);
-    }
+		if (project == null) {
+			return;
+		}
 
-    protected boolean isEnabled() {
-        return true;
-    }
+		addAction("com.developerphil.adbidea.action.UninstallAction", group);
+		addAction("com.developerphil.adbidea.action.KillAction", group);
+		addAction("com.developerphil.adbidea.action.StartAction", group);
+		addAction("com.developerphil.adbidea.action.RestartAction", group);
+		addAction("com.developerphil.adbidea.action.ClearDataAction", group);
+		addAction("com.developerphil.adbidea.action.ClearDataAndRestartAction",
+				group);
+	}
 
-    private void addAction(final String actionId, final DefaultActionGroup toGroup) {
-        final AnAction action = ActionManager.getInstance().getAction(actionId);
+	protected boolean isEnabled() {
+		return true;
+	}
 
-        // add action to group if it is available
-        if (action != null) {
-            toGroup.add(action);
-        }
-    }
+	private void addAction(final String actionId,
+			final DefaultActionGroup toGroup) {
+		final AnAction action = ActionManager.getInstance().getAction(actionId);
 
-    protected String getPopupTitle(AnActionEvent e) {
-        return "ADB Operations Popup";
-    }
+		// add action to group if it is available
+		if (action != null) {
+			toGroup.add(action);
+		}
+	}
+
+	protected String getPopupTitle(AnActionEvent e) {
+		return "ADB Operations Popup";
+	}
 
 }

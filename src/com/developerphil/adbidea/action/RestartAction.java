@@ -6,7 +6,7 @@ import com.intellij.openapi.project.Project;
 
 public class RestartAction extends AdbAction {
 
-    public void actionPerformed(AnActionEvent e, Project project) {
-        AdbFacade.restartDefaultActivity(project);
-    }
+	public void actionPerformed(AnActionEvent e, Project project) {
+		AdbFacade.restartDefaultActivity(project);
+	}
 }

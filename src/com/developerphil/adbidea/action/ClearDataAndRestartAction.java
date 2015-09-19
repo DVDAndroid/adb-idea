@@ -6,9 +6,8 @@ import com.intellij.openapi.project.Project;
 
 public class ClearDataAndRestartAction extends AdbAction {
 
-    public void actionPerformed(AnActionEvent e, Project project) {
-        AdbFacade.clearDataAndRestart(project);
-    }
-
+	public void actionPerformed(AnActionEvent e, Project project) {
+		AdbFacade.clearDataAndRestart(project);
+	}
 
 }
