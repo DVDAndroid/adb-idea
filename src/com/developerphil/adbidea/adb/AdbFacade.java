@@ -12,34 +12,34 @@ import org.jetbrains.android.util.AndroidUtils;
 
 import com.android.ddmlib.AndroidDebugBridge;
 import com.android.ddmlib.IDevice;
-import com.developerphil.adbidea.adb.command.*;
+import com.developerphil.adbidea.adb.command.ClearDataAndRestartCommand;
+import com.developerphil.adbidea.adb.command.ClearDataCommand;
+import com.developerphil.adbidea.adb.command.Command;
+import com.developerphil.adbidea.adb.command.KillCommand;
+import com.developerphil.adbidea.adb.command.RestartPackageCommand;
+import com.developerphil.adbidea.adb.command.StartDefaultActivityCommand;
+import com.developerphil.adbidea.adb.command.ToggleDisplayCommand;
+import com.developerphil.adbidea.adb.command.UninstallCommand;
 import com.developerphil.adbidea.ui.DeviceChooserDialog;
 import com.developerphil.adbidea.ui.ModuleChooserDialogHelper;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
-import org.jetbrains.android.facet.AndroidFacet;
-import org.jetbrains.android.sdk.AndroidSdkUtils;
-import org.jetbrains.android.util.AndroidUtils;
-
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import static com.developerphil.adbidea.ui.NotificationHelper.error;
 
 public class AdbFacade {
 
-    private static final ExecutorService EXECUTOR = Executors.newCachedThreadPool(new ThreadFactoryBuilder().setNameFormat("AdbIdea-%d").build());
+	private static final ExecutorService EXECUTOR = Executors
+			.newCachedThreadPool(new ThreadFactoryBuilder()
+                    .setNameFormat("AdbIdea-%d").build());
 
-    public static void uninstall(Project project) {
-        executeOnDevice(project, new UninstallCommand());
-    }
+	public static void uninstall(Project project) {
+		executeOnDevice(project, new UninstallCommand());
+	}
 
-    public static void kill(Project project) {
-        executeOnDevice(project, new KillCommand());
-    }
+	public static void kill(Project project) {
+		executeOnDevice(project, new KillCommand());
+	}
 
 	public static void startDefaultActivity(Project project) {
 		executeOnDevice(project, new StartDefaultActivityCommand());
@@ -53,108 +53,113 @@ public class AdbFacade {
 		executeOnDevice(project, new ClearDataCommand());
 	}
 
-    public static void clearDataAndRestart(Project project) {
-        executeOnDevice(project, new ClearDataAndRestartCommand());
-    }
-    
-    public static void toggleDisplay(Project project) {
-        executeOnDevice(project, new ToggleDisplayCommand());
-    }
+	public static void clearDataAndRestart(Project project) {
+		executeOnDevice(project, new ClearDataAndRestartCommand());
+	}
 
-    private static void executeOnDevice(final Project project, final Command runnable) {
-        final DeviceResult result = getDevice(project);
-        if (result != null) {
-            for (final IDevice device : result.devices) {
-                EXECUTOR.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        runnable.run(project, device, result.facet, result.packageName);
-                    }
-                });
-            }
-        } else {
-            error("No Device found");
-        }
-    }
+	public static void toggleDisplay(Project project) {
+		executeOnDevice(project, new ToggleDisplayCommand());
+	}
 
-    private static DeviceResult getDevice(Project project) {
-        List<AndroidFacet> facets = getApplicationFacets(project);
-        if (!facets.isEmpty()) {
-            AndroidFacet facet;
-            if (facets.size() > 1) {
-                facet = ModuleChooserDialogHelper.showDialogForFacets(project, facets);
-                if (facet == null) {
-                    return null;
-                }
-            } else {
-                facet = facets.get(0);
-            }
-            String packageName = AdbUtil.computePackageName(facet);
+	private static void executeOnDevice(final Project project,
+			final Command runnable) {
+		final DeviceResult result = getDevice(project);
+		if (result != null) {
+			for (final IDevice device : result.devices) {
+				EXECUTOR.submit(new Runnable() {
+					@Override
+					public void run() {
+						runnable.run(project, device, result.facet,
+								result.packageName);
+					}
+				});
+			}
+		} else {
+			error("No Device found");
+		}
+	}
 
-            AndroidDebugBridge bridge = AndroidSdkUtils.getDebugBridge(project);
-            if (bridge == null) {
-                error("No platform configured");
-                return null;
-            }
+	private static DeviceResult getDevice(Project project) {
+		List<AndroidFacet> facets = getApplicationFacets(project);
+		if (!facets.isEmpty()) {
+			AndroidFacet facet;
+			if (facets.size() > 1) {
+				facet = ModuleChooserDialogHelper.showDialogForFacets(project,
+						facets);
+				if (facet == null) {
+					return null;
+				}
+			} else {
+				facet = facets.get(0);
+			}
+			String packageName = AdbUtil.computePackageName(facet);
 
-            if (bridge.isConnected() && bridge.hasInitialDeviceList()) {
-                IDevice[] devices = bridge.getDevices();
-                if (devices.length == 1) {
-                    return new DeviceResult(devices, facet, packageName);
-                } else if (devices.length > 1) {
-                    return askUserForDevice(facet, packageName);
-                } else {
-                    return null;
-                }
-            }
-        }
-        return null;
-    }
+			AndroidDebugBridge bridge = AndroidSdkUtils.getDebugBridge(project);
+			if (bridge == null) {
+				error("No platform configured");
+				return null;
+			}
 
-    private static List<AndroidFacet> getApplicationFacets(Project project) {
+			if (bridge.isConnected() && bridge.hasInitialDeviceList()) {
+				IDevice[] devices = bridge.getDevices();
+				if (devices.length == 1) {
+					return new DeviceResult(devices, facet, packageName);
+				} else if (devices.length > 1) {
+					return askUserForDevice(facet, packageName);
+				} else {
+					return null;
+				}
+			}
+		}
+		return null;
+	}
 
-        List<AndroidFacet> facets = Lists.newArrayList();
-        for (AndroidFacet facet : AndroidUtils.getApplicationFacets(project)) {
-            if (!isTestProject(facet)) {
-                facets.add(facet);
-            }
-        }
+	private static List<AndroidFacet> getApplicationFacets(Project project) {
 
-        return facets;
-    }
+		List<AndroidFacet> facets = Lists.newArrayList();
+		for (AndroidFacet facet : AndroidUtils.getApplicationFacets(project)) {
+			if (!isTestProject(facet)) {
+				facets.add(facet);
+			}
+		}
 
-    private static boolean isTestProject(AndroidFacet facet) {
-        return facet.getManifest() != null
-                && facet.getManifest().getInstrumentations() != null
-                && !facet.getManifest().getInstrumentations().isEmpty();
-    }
+		return facets;
+	}
 
-    private static DeviceResult askUserForDevice(AndroidFacet facet, String packageName) {
-        final DeviceChooserDialog chooser = new DeviceChooserDialog(facet);
-        chooser.show();
+	private static boolean isTestProject(AndroidFacet facet) {
+		return facet.getManifest() != null
+				&& facet.getManifest().getInstrumentations() != null
+				&& !facet.getManifest().getInstrumentations().isEmpty();
+	}
 
-        if (chooser.getExitCode() != DialogWrapper.OK_EXIT_CODE) {
-            return null;
-        }
+	private static DeviceResult askUserForDevice(AndroidFacet facet,
+			String packageName) {
+		final DeviceChooserDialog chooser = new DeviceChooserDialog(facet);
+		chooser.show();
 
-        IDevice[] selectedDevices = chooser.getSelectedDevices();
-        if (selectedDevices.length == 0) {
-            return null;
-        }
+		if (chooser.getExitCode() != DialogWrapper.OK_EXIT_CODE) {
+			return null;
+		}
 
-        return new DeviceResult(selectedDevices, facet, packageName);
-    }
+		IDevice[] selectedDevices = chooser.getSelectedDevices();
+		if (selectedDevices.length == 0) {
+			return null;
+		}
 
-    private static final class DeviceResult {
-        private final IDevice[] devices;
-        private final AndroidFacet facet;
-        private final String packageName;
+		return new DeviceResult(selectedDevices, facet, packageName);
+	}
 
-        private DeviceResult(IDevice[] devices, AndroidFacet facet, String packageName) {
-            this.devices = devices;
-            this.facet = facet;
-            this.packageName = packageName;
-        }
-    }
+	private static final class DeviceResult {
+		private final IDevice[] devices;
+		private final AndroidFacet facet;
+		private final String packageName;
+
+		private DeviceResult(IDevice[] devices, AndroidFacet facet,
+				String packageName) {
+			this.devices = devices;
+			this.facet = facet;
+			this.packageName = packageName;
+		}
+	}
 
 }
