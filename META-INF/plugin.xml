@@ -1,7 +1,7 @@
 <idea-plugin url="https://github.com/pbreault/adb-idea" version="3">
     <id>com.developerphil.adbidea</id>
     <name>ADB Idea</name>
-    <version>1.1.6</version>
+    <version>1.2.1 by dvdandroid</version>
     <vendor url="http://www.developerphil.com">Philippe Breault</vendor>
 
     <description><![CDATA[
@@ -17,6 +17,7 @@
             <li>ADB Restart App With Debugger</li>
             <li>ADB Clear App Data and Restart With Debugger</li>
             <li>ADB Reboot device</li>
+            <li>...</li>
         </ul>
         <br />
         There are two basic ways to invoke a command:
@@ -28,6 +29,7 @@
 
 
     <change-notes><![CDATA[
+        ...........
         <b>1.1.6</b>
         <ul>
             <li>Added device reboot action</li>
