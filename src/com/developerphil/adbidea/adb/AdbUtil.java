@@ -6,7 +6,10 @@ import java.io.InputStreamReader;
 import java.util.concurrent.TimeUnit;
 
 import org.jetbrains.android.facet.AndroidFacet;
+import org.jetbrains.android.run.DefaultActivityLocator;
 import org.jetbrains.android.sdk.AndroidSdkUtils;
+import org.jetbrains.android.util.AndroidUtils;
+import org.joor.Reflect;
 
 import com.android.ddmlib.AdbCommandRejectedException;
 import com.android.ddmlib.IDevice;
@@ -35,6 +38,17 @@ public class AdbUtil {
 		// e.g. if our app is called com.example but there is another app called
 		// com.example.another.app, it will match and return a false positive
 		return !receiver.getAdbOutputLines().isEmpty();
+	}
+
+	public static String getDefaultLauncherActivityName(AndroidFacet facet) {
+		try {
+			return DefaultActivityLocator
+					.getDefaultLauncherActivityName(facet.getManifest());
+		} catch (Error e) {
+			return Reflect.on(AndroidUtils.class)
+					.call("getDefaultLauncherActivityName", facet.getManifest())
+					.get();
+		}
 	}
 
 	/**

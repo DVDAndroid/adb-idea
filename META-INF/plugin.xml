@@ -104,6 +104,11 @@
                     id="com.developerphil.adbidea.action.ClearDataAndRestartAction"
                     text="ADB Clear App Data and Restart">
             </action>
+            <action class="com.developerphil.adbidea.action.ToggleDisplayAction"
+                    description="Turn on or off display"
+                    id="com.developerphil.adbidea.action.ToggleDisplayAction"
+                    text="ADB Toggle display">
+            </action>
 
             <group description="ADB commands to connect to device" id="AdbConnect"
                    popup="true" text="_ADB Connect...">

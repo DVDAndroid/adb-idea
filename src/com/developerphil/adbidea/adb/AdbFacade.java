@@ -147,6 +147,10 @@ public class AdbFacade {
         return new DeviceResult(selectedDevices, facet, packageName);
     }
 
+    public static void toggleDisplay(Project project) {
+        executeOnDevice(project, new ToggleDisplayCommand());
+    }
+
     private static final class DeviceResult {
         private final IDevice[] devices;
         private final AndroidFacet facet;
