@@ -1,15 +1,21 @@
 package com.developerphil.adbidea.adb;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.concurrent.TimeUnit;
 
 import org.jetbrains.android.facet.AndroidFacet;
+import org.jetbrains.android.sdk.AndroidSdkUtils;
 
 import com.android.ddmlib.AdbCommandRejectedException;
 import com.android.ddmlib.IDevice;
 import com.android.ddmlib.ShellCommandUnresponsiveException;
 import com.android.ddmlib.TimeoutException;
 import com.developerphil.adbidea.adb.command.receiver.GenericReceiver;
+import com.developerphil.adbidea.ui.NotificationHelper;
+import com.intellij.notification.NotificationType;
+import com.intellij.openapi.project.Project;
 
 public class AdbUtil {
 
@@ -39,8 +45,8 @@ public class AdbUtil {
 		try {
 			Object androidModuleInfo = facet.getClass()
 					.getMethod("getAndroidModuleInfo").invoke(facet);
-			return (String) androidModuleInfo.getClass()
-					.getMethod("getPackage").invoke(androidModuleInfo);
+			return (String) androidModuleInfo.getClass().getMethod("getPackage")
+					.invoke(androidModuleInfo);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -55,11 +61,11 @@ public class AdbUtil {
 			throws Exception {
 		String output = "";
 		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					Runtime.getRuntime()
-							.exec(String.valueOf(AndroidSdkUtils
-									.getAdb(project) + " " + command))
-							.getInputStream()));
+			BufferedReader br = new BufferedReader(new InputStreamReader(Runtime
+					.getRuntime()
+					.exec(String.valueOf(
+							AndroidSdkUtils.getAdb(project) + " " + command))
+					.getInputStream()));
 
 			String strLine;
 			while ((strLine = br.readLine()) != null) {
@@ -77,17 +83,18 @@ public class AdbUtil {
 			}
 
 		} catch (Throwable e) {
-			NotificationHelper
-					.sendNotification("ERROR", NotificationType.ERROR);
+			NotificationHelper.sendNotification("ERROR",
+					NotificationType.ERROR);
 		} finally {
 			boolean error = command.equals("start-server")
-					|| command.contains("connect") ? output.contains("error")
-					|| output.contains("unable") : output.contains("not")
-					|| output.contains("error") || output.contains("unable");
+					|| command.contains("connect")
+							? output.contains("error")
+									|| output.contains("unable")
+							: output.contains("not") || output.contains("error")
+									|| output.contains("unable");
 
-			NotificationHelper.sendNotification(output,
-					error ? NotificationType.ERROR
-							: NotificationType.INFORMATION);
+			NotificationHelper.sendNotification(output, error
+					? NotificationType.ERROR : NotificationType.INFORMATION);
 		}
 
 	}
