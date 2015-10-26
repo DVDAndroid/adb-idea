@@ -1,7 +1,7 @@
 <idea-plugin version="3" url="https://github.com/pbreault/adb-idea">
     <id>com.developerphil.adbidea</id>
     <name>ADB Idea</name>
-    <version>1.2.2 by dvdandroid</version>
+    <version>1.2.3 by dvdandroid</version>
     <vendor url="http://www.developerphil.com">Philippe Breault</vendor>
 
     <description><![CDATA[
@@ -73,7 +73,8 @@
         ]]>
     </change-notes>
 
-    <idea-version since-build="107.105"/>
+    <!-- Android Studio 1.2 and Intellij 14-->
+    <idea-version since-build="141"/>
 
     <depends>com.intellij.modules.platform</depends>
     <depends>org.jetbrains.android</depends>
