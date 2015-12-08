@@ -1,5 +1,5 @@
 <idea-plugin version="3" url="https://github.com/pbreault/adb-idea">
-    <id>com.developerphil.adbidea</id>
+    <id>com.dvd.intellijidea.adbidea</id>
     <name>ADB Idea</name>
     <version>1.2.3 by dvdandroid</version>
     <vendor url="http://www.developerphil.com">Philippe Breault</vendor>

@@ -66,12 +66,12 @@ public class StartDefaultActivityCommandWithDebugger implements Command {
                 @Override
                 public void run() {
                     if (!AndroidSdkUtils.activateDdmsIfNecessary(project)) {
-                        error(String.format("activateDdmsIfNecessary returns false, unable to start debugging."));
+                        error("activateDdmsIfNecessary returns false, unable to start debugging.");
                         debuggingStatus = false;
                     } else {
                         debuggingStatus = startDebugging(prvDevice, prvProject, prvPackageName);
                         if (!debuggingStatus) {
-                            error(String.format("startDebugging returns false."));
+                            error("startDebugging returns false.");
                             info(String.format("<b>%s</b> forced-stop on %s", packageName, device.getName()));
                             try {
                                 device.executeShellCommand("am force-stop " + packageName, new GenericReceiver(), 5L, TimeUnit.MINUTES);
@@ -112,7 +112,7 @@ public class StartDefaultActivityCommandWithDebugger implements Command {
     public static class StartActivityReceiver extends MultiLineReceiver {
 
         public String message = "Nothing Received";
-        public final List<String> currentLines = new ArrayList<String>();
+        public final List<String> currentLines = new ArrayList<>();
 
         @Override
         public void processNewLines(String[] strings) {
@@ -210,10 +210,6 @@ public class StartDefaultActivityCommandWithDebugger implements Command {
         /* Start a new instance */
         RemoteConfigurationType remoteConfigurationType = RemoteConfigurationType.getInstance();
 
-        if (remoteConfigurationType == null) {
-            error("Cannot create remote configuration");
-        }
-
         ConfigurationFactory factory = remoteConfigurationType.getFactory();
         prvSettings = RunManager.getInstance(project).createRunConfiguration(configurationName, factory);
 
@@ -237,7 +233,7 @@ public class StartDefaultActivityCommandWithDebugger implements Command {
         Client client = null;
         if (device == null) {
             throw new IllegalArgumentException(
-                    String.format("ERROR: startDebugging(): device == null"));
+                    "ERROR: startDebugging(): device == null");
         }
         info(String.format("Target device: " + device.getName(), ProcessOutputTypes.STDOUT));
 
@@ -251,15 +247,15 @@ public class StartDefaultActivityCommandWithDebugger implements Command {
             Uninterruptibles.sleepUninterruptibly(1, TimeUnit.SECONDS);
 
             IDevice [] devices = bridge.getDevices();
-            for (int loop = 0; loop < devices.length; loop++) {
-                if (devices[loop] != null) {
-                    client = devices[loop].getClient(packageName);
+            for (IDevice device1 : devices) {
+                if (device1 != null) {
+                    client = device1.getClient(packageName);
                 }
                 if (client != null) break;
             }
             boolean canDdmsBeCorrupted = AdbService.canDdmsBeCorrupted(bridge);
-            if (bridge != null && canDdmsBeCorrupted) {
-                error(String.format("ERROR: ddms can be corrupted, can't start debugger."));
+            if (canDdmsBeCorrupted) {
+                error("ERROR: ddms can be corrupted, can't start debugger.");
                 return false;
             }
 
@@ -268,9 +264,9 @@ public class StartDefaultActivityCommandWithDebugger implements Command {
                 if (device.hasClients()) {
                     client = null;
                     clients = device.getClients();
-                    for (int i=0; i<clients.length; i++) {
-                        if (packageName.equalsIgnoreCase(clients[i].getClientData().getClientDescription())) {
-                            client = clients[i];
+                    for (Client client1 : clients) {
+                        if (packageName.equalsIgnoreCase(client1.getClientData().getClientDescription())) {
+                            client = client1;
                             break;
                         }
                     }
@@ -283,7 +279,7 @@ public class StartDefaultActivityCommandWithDebugger implements Command {
             }
 
             if (client == null) {
-                error(String.format("ERROR: Can't start debugger."));
+                error("ERROR: Can't start debugger.");
                 return false;
             }
 
@@ -292,7 +288,7 @@ public class StartDefaultActivityCommandWithDebugger implements Command {
 
             return true;
         } catch (Exception e) {
-            error(String.format("ERROR: Fatal Exception, unable to start debugger!"));
+            error("ERROR: Fatal Exception, unable to start debugger!");
         }
 
         return false;

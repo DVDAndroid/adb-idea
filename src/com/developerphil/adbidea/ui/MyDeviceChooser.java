@@ -22,6 +22,7 @@ import com.android.sdklib.AndroidVersion;
 import com.android.sdklib.IAndroidTarget;
 import com.android.tools.idea.ddms.DeviceRenderer;
 import com.android.tools.idea.model.AndroidModuleInfo;
+import com.android.tools.idea.run.AndroidDevice;
 import com.android.tools.idea.run.LaunchCompatibility;
 import com.developerphil.adbidea.adb.AdbUtil;
 import com.intellij.openapi.Disposable;
@@ -88,7 +89,7 @@ public class MyDeviceChooser implements Disposable {
    * If it is different than {@link #myDisplayedDevices}, then a {@link #refreshTable} invocation in the EDT thread
    * will update the displayed list to match the detected list.
    */
-  private AtomicReference<IDevice[]> myDetectedDevicesRef = new AtomicReference<IDevice[]>(EMPTY_DEVICE_ARRAY);
+  private AtomicReference<IDevice[]> myDetectedDevicesRef = new AtomicReference<>(EMPTY_DEVICE_ARRAY);
 
   private JComponent myPanel;
   private JBTable myDeviceTable;
@@ -225,7 +226,7 @@ public class MyDeviceChooser implements Disposable {
 
   private void resetSelection(@NotNull String[] selectedSerials) {
     MyDeviceTableModel model = (MyDeviceTableModel)myDeviceTable.getModel();
-    Set<String> selectedSerialsSet = new HashSet<String>();
+    Set<String> selectedSerialsSet = new HashSet<>();
     Collections.addAll(selectedSerialsSet, selectedSerials);
     IDevice[] myDevices = model.myDevices;
     ListSelectionModel selectionModel = myDeviceTable.getSelectionModel();
@@ -320,7 +321,7 @@ public class MyDeviceChooser implements Disposable {
   @NotNull
   public IDevice[] getSelectedDevices() {
     int[] rows = mySelectedRows != null ? mySelectedRows : myDeviceTable.getSelectedRows();
-    List<IDevice> result = new ArrayList<IDevice>();
+    List<IDevice> result = new ArrayList<>();
     for (int row : rows) {
       if (row >= 0) {
         Object serial = myDeviceTable.getValueAt(row, SERIAL_COLUMN_INDEX);
@@ -342,7 +343,7 @@ public class MyDeviceChooser implements Disposable {
 
   @NotNull
   private IDevice[] getFilteredDevices(AndroidDebugBridge bridge) {
-    final List<IDevice> filteredDevices = new ArrayList<IDevice>();
+    final List<IDevice> filteredDevices = new ArrayList<>();
     for (IDevice device : bridge.getDevices()) {
       if (myFilter == null || myFilter.value(device)) {
         filteredDevices.add(device);
@@ -418,7 +419,7 @@ public class MyDeviceChooser implements Disposable {
         case DEVICE_STATE_COLUMN_INDEX:
           return getDeviceState(device);
         case COMPATIBILITY_COLUMN_INDEX:
-          return LaunchCompatibility.canRunOnDevice(myMinSdkVersion, myProjectTarget, myRequiredHardwareFeatures, device, null);
+          return LaunchCompatibility.canRunOnDevice(myMinSdkVersion, myProjectTarget, myRequiredHardwareFeatures, (AndroidDevice) device, null);//test
       }
       return null;
     }
